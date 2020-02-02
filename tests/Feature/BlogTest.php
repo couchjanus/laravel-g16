@@ -56,6 +56,23 @@ class BlogTest extends TestCase
         $response->assertViewIs('welcome');
     }
  
+    public function testBlogView()
+    {
+        $response = $this->get('/blog');
+        $response->assertViewIs('blog');
+    }
 
+    public function testBlogViewShow()    {
+        $response = $this->get('/blog/show');
+        $response->assertViewIs('blog/show');
+    }
+
+    public function test_assert_view_has_create_new_post()
+    {
+        $this->get('blog/create')
+            ->assertViewHas('title', 'Create New Post');
+    }
+
+ 
 
 }
