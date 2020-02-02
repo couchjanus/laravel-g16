@@ -14,3 +14,16 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Route::namespace('Admin')
+//     ->prefix('admin')
+//     ->group(function () {
+//         Route::resource('users', 'UserController');
+// });
+
+Route::namespace('Admin')
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::resource('users', 'UserController');
+    });
