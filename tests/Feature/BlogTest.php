@@ -73,6 +73,33 @@ class BlogTest extends TestCase
             ->assertViewHas('title', 'Create New Post');
     }
 
+    public function test_blog_index_returns_a_view()
+    {
+        $response = $this->get(url('blog'));
+        $response = $this->get(route('blog'));
+        $response->assertStatus(200);
+    }
+    // public function testBlogViewSee()
+    // {
+    //     $response = $this->get('/blog');
+    //     $value = 'Hello there! It’s a Blog!';
+
+    //     $response->assertViewHas($key, $value = null);
+
+    //     // $response->assertDontSee($value);
+    //     // $response->assertSee($value);
+    //     // $response->assertDontSeeText($value);
+    // }
+
+
+    // visit(), see(), and dontSee()
+    // public function testBlogVisit()
+    // {
+    //     visit('/blog')
+    //          ->see('Hello there! It’s a Blog!')
+    //          ->dontSee('Beta');
+    // }
+
  
 
 }
