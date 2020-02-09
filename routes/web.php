@@ -13,6 +13,10 @@ Route::namespace('Admin')
     	Route::resource('users', 'UserController');
 });
 
+Route::get('/blog', 'BlogController@index')->name('blog.index'); 
+
+Route::get('/blog/{post}', 'BlogController@show')->name('blog.show'); 
+
 // Еще какие-то маршруты....
 
 Route::fallback(function() {
