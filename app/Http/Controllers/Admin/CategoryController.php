@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Category;
+use App\Enums\CategoryEnumStatusType;
 
 class CategoryController extends Controller
 {
@@ -14,7 +16,10 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $categories = Category::orderBy('id', 'desc')->paginate();
+        $title = 'Categories Management';
+        $status = CategoryEnumStatusType::toSelectArray();
+        return view('admin.categories.index', compact('categories', 'title', 'status'));
     }
 
     /**
@@ -24,7 +29,9 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        $title = 'Add Category';
+        $status = CategoryEnumStatusType::toSelectArray();
+        return view('admin.categories.create', compact('title', 'status'));
     }
 
     /**
@@ -33,20 +40,22 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    
     public function store(Request $request)
     {
-        //
+        Category::create($request->all());
+        return redirect(route('admin.categories.index'));
     }
-
+    
     /**
      * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Category $category)
     {
-        //
+        return view('admin.categories.show')->withCategory($category)->withTitle('Show Category');
     }
 
     /**
@@ -55,9 +64,11 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    
+    public function edit(Category $category)
     {
-        //
+        $status = CategoryEnumStatusType::toSelectArray();
+        return view('admin.categories.edit')->withCategory($category)->withTitle('Edit Category')->withStatus($status);
     }
 
     /**
@@ -67,9 +78,10 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Category $category)
     {
-        //
+        $category->update($request->all());
+        return redirect()->route('admin.categories.index');
     }
 
     /**
@@ -78,8 +90,40 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Category $category)
     {
-        //
+        $category->delete();
+        return redirect()->route('admin.categories.index');
+    }
+
+    public function trashed()
+    {
+        // $categories = Category::onlyTrashed()->get();
+        $categories = Category::onlyTrashed()->paginate();
+        $title = 'Trashed Categories';
+        return view('admin.categories.trashed', compact('title', 'categories'));
+    }
+
+    public function restore($id)
+    {
+        Category::withTrashed()
+            ->where('id', $id)
+            ->restore();
+
+        return redirect(route('admin.categories.trashed'));
+    }
+
+    public function categoryDestroy($id)
+    {
+        $category = Category::withTrashed()
+                ->findOrFail($id);
+        $category->forceDelete();
+        return redirect()->route('admin.categories.index');
+    }
+    
+    public function force($id)
+    {
+        Category::trash($id)->forceDelete();
+        return redirect()->route('admin.categories.index');
     }
 }
