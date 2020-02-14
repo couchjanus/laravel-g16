@@ -7,14 +7,29 @@ use App\Post;
 
 class BlogController extends Controller
 {
+    // public function index()
+    // {
+    //     $posts = Post::simplePaginate(7);
+    //     return view('blog.index', ['title'=>'Hello there! It’s a Blog!', 'posts' => $posts]);
+    // }
+
     public function index()
     {
-        $posts = Post::all();
+        $posts = Post::where('status', 2)->with('user')->simplePaginate(7);
         return view('blog.index', ['title'=>'Hello there! It’s a Blog!', 'posts' => $posts]);
     }
 
-    public function show(Post $post)
+
+    public function show($slug)
     {
+        if (is_numeric($slug)) {
+            // Get post for slug.
+            $post = Post::findOrFail($slug);
+            return Redirect::to(route('blog.show', $post->slug), 301);
+            // 301 редирект со старой страницы, на новую.   
+        }
+        // Get post for slug.
+        $post = Post::whereSlug($slug)->firstOrFail();
         return view('blog.show',compact('post'));
     }
 
