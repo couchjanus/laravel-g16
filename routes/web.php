@@ -14,6 +14,13 @@ Route::namespace('Admin')
         Route::post('categories/restore/{id}', 'CategoryController@restore')->name('categories.restore');
         Route::delete('categories/force/{id}', 'CategoryController@force')->name('categories.force');
         Route::resource('categories', 'CategoryController');
+
+        Route::get('users/trashed', 'UserController@trashed')->name('users.trashed');
+        Route::post('users/restore/{id}', 'UserController@restore')->name('users.restore');
+        Route::delete('users/force/{id}', 'UserController@force')->name('users.force');
+
+        Route::post('changeStatus', 'UserController@changeUserStatus');
+
         Route::resource('users', 'UserController');
         Route::resource('posts', 'PostController');
         Route::resource('tags', 'TagController');
@@ -21,27 +28,12 @@ Route::namespace('Admin')
 
 Route::get('/blog', 'BlogController@index')->name('blog.index'); 
 
-// Route::get('/blog/{post}', 'BlogController@show')->name('blog.show'); 
 Route::get('blog/{slug}', 'BlogController@show')->name('blog.show');
 
+Auth::routes();
 
-Route::get('posts-by-status', function () {
-    $user = \App\User::find(2);
-    $posts = $user->posts()->get();
-    $posts = $user->posts->where('status', 1)->all();
-    foreach ($posts as $post) {
-        dump($post);
-    }
-});
+Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/get-by-user', function () {
-    $posts = App\Post::where('status', 2)
-    ->with('user')
-    ->get();
-    dump($posts);
-});
- 
- 
 
 // Еще какие-то маршруты....
 
