@@ -59,4 +59,15 @@ class User extends Authenticatable
     {
         return $query->where('status', $status);
     }
+
+    public function social()
+    {
+        return $this->hasMany(Social::class);
+    }
+
+    public function isAdmin()
+    {
+        return $this->is_admin;
+    }
+
 }

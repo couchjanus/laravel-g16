@@ -3,36 +3,57 @@
 Route::get('/', function () {
     return view('welcome');
 });
-
+// Route::middleware('auth', 'admin')->namespace('Admin')
 Route::namespace('Admin')
     ->prefix('admin')
     ->as('admin.')
 	->group(function () {
-        Route::get('', 'DashboardController')->name('index'); 	 
+        Route::get('/', 'DashboardController')->name('index'); 	 
+        Route::get('posts/status', 'PostController@getPostsByStatus')->name('posts.status'); 	 
+        Route::resource('posts', 'PostController');
+        Route::get('categories/status', 'CategoryController@getCategoriesByStatus')->name('categories.status');
         
         Route::get('categories/trashed', 'CategoryController@trashed')->name('categories.trashed');
         Route::post('categories/restore/{id}', 'CategoryController@restore')->name('categories.restore');
         Route::delete('categories/force/{id}', 'CategoryController@force')->name('categories.force');
-        Route::resource('categories', 'CategoryController');
 
+        Route::resource('categories', 'CategoryController');
+        
         Route::get('users/trashed', 'UserController@trashed')->name('users.trashed');
         Route::post('users/restore/{id}', 'UserController@restore')->name('users.restore');
         Route::delete('users/force/{id}', 'UserController@force')->name('users.force');
-
-        Route::post('changeStatus', 'UserController@changeUserStatus');
-
         Route::resource('users', 'UserController');
-        Route::resource('posts', 'PostController');
         Route::resource('tags', 'TagController');
+        
         Route::get('invitations', 'InvitationsController@index')->name('showInvitations');
         Route::post('invite/{id}', 'InvitationsController@sendInvite')
         ->name('send.invite');
+         /**
+         * Admin Auth Route(s)
+         */
+        Route::namespace('Auth')->group(function(){
+            //Login Routes
+            Route::get('/login','LoginController@showLoginForm')->name('login');
+            Route::post('/login','LoginController@login');
+            Route::post('/logout','LoginController@logout')->name('logout');
+
+            //Forgot Password Routes
+            Route::get('/password/reset','ForgotPasswordController@showLinkRequestForm')->name('password.request');
+            Route::post('/password/email','ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+
+            //Reset Password Routes
+            Route::get('/password/reset/{token}','ResetPasswordController@showResetForm')->name('password.reset');
+            Route::post('/password/reset','ResetPasswordController@reset')->name('password.update');
+
+        });
 });
+
+
+
 
 Route::get('/blog', 'BlogController@index')->name('blog.index'); 
 Route::get('blog/{slug}', 'BlogController@show')->name('blog.show');
 
-// Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/home', function () {
     return redirect('profile');
@@ -52,46 +73,16 @@ Route::middleware('auth')
 });
 
 Route::get('register/request', 'Auth\RegisterController@requestInvitation')->name('requestInvitation');
-
 Route::post('invitations', 'InvitationController@store')->middleware('guest')->name('storeInvitation');
 
 
 Auth::routes();
 // Auth::routes(['verify' => true]);
 
-// Route::get('reminder', function () {
-//     return new \App\Mail\Reminder();
-// })->name('reminder');
+// Socialite Register Routes
 
-// Route::get('reminder', function () {
-//     return new App\Mail\Reminder('Blah уже скоро!');
-// })->name('reminder');
-
-// Route::post('reminder', function (\Illuminate\Http\Request $request) {
-//     dd($request);
-//     // return redirect()->back();    
-// })->name('reminder');
-
-// Route::post('reminder', function (\Illuminate\Http\Request $request, \Illuminate\Mail\Mailer $mailer) {
-//     $mailer->to($request->email)->send(new \App\Mail\Reminder($request->event));
-//     return redirect()->back();    
-// })->name('reminder');
-
-
-// Route::get('invite', function () {
-//     return (new App\Mail\InvitationMail())->render();
-// });
-
-Route::get('invite', function () {
-    $url = 'Your Invite Link';
-    return (new App\Mail\InvitationMail($url))->render();
-});
-
-// Route::get('invite', function () {
-//     $url = 'http://google.com';
-//     return (new App\Mail\InvitationMail($url))->render();
-// });
-
+Route::get('social/{provider}', 'Auth\SocialController@redirect')->name('social.redirect');
+Route::get('social/{provider}/callback', 'Auth\SocialController@callback')->name('social.callback');
 
 // Еще какие-то маршруты....
 

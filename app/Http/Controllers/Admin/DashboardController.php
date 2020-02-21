@@ -12,9 +12,13 @@ class DashboardController extends Controller
      *
      * @return void
      */
+    // public function __construct()
+    // {
+    //     $this->middleware('auth');
+    // }
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth:admin');
     }
     /**
      * Handle the incoming request.
@@ -24,6 +28,8 @@ class DashboardController extends Controller
      */
     public function __invoke(Request $request)
     {
+        // dd(auth()->user()->isAdmin());
         return view('admin.index');
+
     }
 }

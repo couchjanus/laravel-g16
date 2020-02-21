@@ -46,4 +46,20 @@ class LoginController extends Controller
             $user->save();
         }
     }
+
+    protected function redirectTo() {
+        if (auth()->user()->isAdmin()) {
+            return '/admin';
+        }
+        return '/home';
+    } 
+
+    public function showLoginForm()
+    {
+        return view('auth.login',[
+            'title' => 'Login',
+            'loginRoute' => 'login',
+            'forgotPasswordRoute' => 'password.request',
+        ]);
+    }
 }
