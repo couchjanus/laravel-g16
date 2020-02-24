@@ -37,14 +37,13 @@
             </div>
 
             <div class="form-group">
-                <label for="category_id">Select Category</label>
-                <select name="category_id" class="form-control select2">
-                    @foreach ($categories as $key => $value)
+                <label>Select Category</label>
+                <select name="categories[]" multiple class="form-control select2">
+                    @foreach($categories as $key => $value)
                         <option value="{{ $key }}"
-                            @if ($key == $post->category_id)
-                                selected="selected"
-                            @endif
-                            >{{ $value }}</option>
+                            {{ ($post->categories->pluck('id')->contains($key)) ? 'selected':'' }}  />
+                            {{ $value }}
+                        </option>
                     @endforeach
                 </select>
             </div>

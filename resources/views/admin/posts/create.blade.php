@@ -29,7 +29,7 @@
 
             <div class="form-group">
                 <label for="category">Category:</label>
-                <select class="form-control select2" id="category" name="category_id">
+                <select class="form-control select2" id="category" name="categories[]" multiple>
                     @foreach($categories as $key => $value)
                         <option value="{{ $key }}">{{$value}}</option>
                     @endforeach

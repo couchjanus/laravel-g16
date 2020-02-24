@@ -50,10 +50,9 @@ class PostController extends Controller
             'title' => $request->title,
             'content' => $request->content,
             'status' => $request->status,
-            'category_id' => $request->category_id,
             'user_id' => Auth::id() ?? 1
         ]);
-
+        $post->categories()->sync((array)$request->input('categories'));  
         $post->tags()->sync((array)$request->input('tags'));  
         return redirect()->route('admin.posts.index');
     }
@@ -92,8 +91,9 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        $post->update(['title' => $request->title, 'content'=>$request->content, 'status'=>$request->status, 'category_id'=>$request->category_id, 'user_id'=>Auth::id() ?? 1]);
-        $post->tags()->sync((array)$request->input('tag'));
+        $post->update(['title' => $request->title, 'content'=>$request->content, 'status'=>$request->status, 'user_id'=>Auth::id() ?? 1]);
+        $post->tags()->sync((array)$request->input('tags'));
+        $post->categories()->sync((array)$request->input('categories')); 
         return redirect()->route('admin.posts.index');
     }
 

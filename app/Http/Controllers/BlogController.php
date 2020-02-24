@@ -15,7 +15,7 @@ class BlogController extends Controller
 
     public function index()
     {
-        $posts = Post::where('status', 2)->with('user')->simplePaginate(7);
+        $posts = Post::where('status', 2)->with('user')->orderBy('updated_at', 'desc')->simplePaginate(7);
         return view('blog.index', ['title'=>'Hello there! It’s a Blog!', 'posts' => $posts]);
     }
 
@@ -29,7 +29,7 @@ class BlogController extends Controller
             // 301 редирект со старой страницы, на новую.   
         }
         // Get post for slug.
-        $post = Post::whereSlug($slug)->firstOrFail();
+        $post = Post::whereSlug($slug)->with('user')->with('categories')->firstOrFail();
         return view('blog.show',compact('post'));
     }
 

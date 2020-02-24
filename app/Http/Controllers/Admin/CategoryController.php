@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Category;
 use App\Enums\CategoryEnumStatusType;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class CategoryController extends Controller
 {
@@ -31,8 +32,10 @@ class CategoryController extends Controller
     public function create()
     {
         $title = 'Add Category';
+        // $categories = Category::pluck('name', 'id');
+        $categories = Category::get()->toTree();
         $status = CategoryEnumStatusType::toSelectArray();
-        return view('admin.categories.create', compact('title', 'status'));
+        return view('admin.categories.create', compact('title', 'status', 'categories'));
     }
 
     /**
@@ -44,7 +47,6 @@ class CategoryController extends Controller
     
     public function store(Request $request)
     {
-        
         $validator = Validator::make($request->all(), [
             'name' => 'required|unique:categories|max:191|min:3',
             'description' => 'nullable|string',
@@ -87,8 +89,10 @@ class CategoryController extends Controller
     
     public function edit(Category $category)
     {
+        
+        $categories = Category::get()->toTree();
         $status = CategoryEnumStatusType::toSelectArray();
-        return view('admin.categories.edit')->withCategory($category)->withTitle('Edit Category')->withStatus($status);
+        return view('admin.categories.edit')->withCategory($category)->withTitle('Edit Category')->withStatus($status)->withCategories($categories);
     }
 
     /**
@@ -100,10 +104,20 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|unique:categories|max:191|min:3',
-            'description' => 'nullable|string',
-        ])->validate();
+        $this->validate($request, 
+            [
+            'name' => [
+                'required',
+                'max' >= 191,
+                'min' >= 3,
+                Rule::unique('categories')->ignore($category->id),
+                ],
+            'description' => 
+                [
+                    'nullable',
+                    'string',
+                ]
+        ]);
 
         $category->update($request->all());
         return redirect()->route('admin.categories.index')->with('success', 'Category Updated Successfully!');

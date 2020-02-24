@@ -12,8 +12,8 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         \DB::table('users')->truncate();
-        \DB::table('categories')->truncate();
         \DB::table('posts')->truncate();
+        \DB::table('categories')->truncate();
         $this->call([
             UsersTableSeeder::class,
             CategoriesTableSeeder::class,

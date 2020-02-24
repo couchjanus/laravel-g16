@@ -15,7 +15,7 @@
     <!-- Author -->
     <p class="lead">
         by
-        <a href="#">{{ $post->user_id }}</a>
+        <a href="#">{{ $post->user->name }}</a>
     </p>
 
     <hr>
@@ -32,7 +32,14 @@
 
     <!-- Post Content -->
     <p class="lead">{{ $post->content }}</p>
-
+    <p><strong>Categories: </strong> 
+    @foreach($post->categories as $cats)
+        <a href="" class="btn btn-info">{{ $cats->name }} &rarr;</a>
+        @foreach($cats->children as $cat)
+         <a href="" class="btn btn-info">{{ $cats->name }} &rarr;</a>
+        @endforeach
+    @endforeach
+    </p>
     <hr>
 
     <!-- Comments Form -->

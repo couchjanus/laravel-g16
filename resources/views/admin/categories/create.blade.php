@@ -19,6 +19,21 @@
             </div>
 
             <div class="form-group">
+                <label for="parent">Parent Category <span class="m-l-5 text-danger"> *</span></label>
+                <select id=parent class="form-control custom-select mt-15 @error('parent_id') is-invalid @enderror" name="parent_id">
+                    <option value="0">Select a parent category</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}"> {{ $category->name }} </option>
+                            @foreach($category->children as $cat)
+                                <option value="{{ $cat->id }}"> {{ $cat->name }} </option>
+                            @endforeach
+                        @endforeach
+                
+                </select>
+                @error('parent_id') {{ $message }} @enderror
+            </div>
+
+            <div class="form-group">
                 <label for="status">Status</label>
                 <select class="form-control select2" id="status" name="status">
                     @foreach($status as $key => $value)

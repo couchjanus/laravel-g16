@@ -19,7 +19,7 @@ class CreatePostsTable extends Migration
             $table->string('title');
             $table->unsignedTinyInteger('status')->default(PostEnumStatusType::Draft);
             $table->unsignedBigInteger('votes')->default(0); 
-            $table->unsignedBigInteger('category_id');
+            // $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('user_id'); 
             $table->longText('content');
             $table->softDeletes();

@@ -10,7 +10,7 @@ class Post extends Model
     use Sluggable;
 
     protected $fillable = [
-        'title', 'content', 'status', 'category_id', 'user_id'
+        'title', 'content', 'status', 'user_id'
     ];
 
     /**
@@ -39,6 +39,14 @@ class Post extends Model
 
     public function tags()
     {
-       return $this->belongsToMany(Tag::class,  'post_tag');
+       return $this->belongsToMany(Tag::class, 'post_tag');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class);
     }
 }
