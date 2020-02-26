@@ -30,6 +30,8 @@ class BlogController extends Controller
         }
         // Get post for slug.
         $post = Post::whereSlug($slug)->with('user')->with('categories')->firstOrFail();
+        
+        $post->update(['visits' => $post->visits+1]);
         return view('blog.show',compact('post'));
     }
 

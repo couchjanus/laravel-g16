@@ -8,7 +8,6 @@ use App\Enums\PostEnumStatusType;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 
 $factory->define(Post::class, function (Faker $faker) {
-    // $categoriesIds = \DB::table('categories')->pluck('id');
     $usersIds = \DB::table('users')->pluck('id');
     $title = $faker->sentence();
     return [
@@ -17,7 +16,8 @@ $factory->define(Post::class, function (Faker $faker) {
         'content' => $faker->paragraph(20),
         'status' => $faker->randomElement($array = PostEnumStatusType::getValues()),
         'votes' => $faker->randomDigit(),
-        // 'category_id' => $faker->randomElement($array = $categoriesIds), 
         'user_id' =>  $faker->randomElement($array = $usersIds),
+        "cover_path" => asset("storage/covers/cover.png"),
+        "visits" => 0
     ];
 });

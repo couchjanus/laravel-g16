@@ -10,7 +10,7 @@ class Post extends Model
     use Sluggable;
 
     protected $fillable = [
-        'title', 'content', 'status', 'user_id'
+        'title', 'content', 'status', 'user_id', 'cover_path', 'visits'
     ];
 
     /**
@@ -48,5 +48,17 @@ class Post extends Model
     public function categories()
     {
         return $this->belongsToMany(Category::class);
+    }
+
+    public function getCoverAttribute()
+    {
+        $parts = explode("/", $this->cover_path);
+
+        return end($parts);
+    }
+
+    public function getDescriptionAttribute()
+    {
+        return substr($this->content, 0, 70) . "...";
     }
 }

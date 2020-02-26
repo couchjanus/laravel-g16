@@ -16,18 +16,16 @@
     @forelse($posts as $post)
         <!-- Blog Post -->
     <div class="card mb-4">
-        <img class="card-img-top" src="http://placehold.it/750x300" alt="Card image cap">
+        <img class="card-img-top" src="{{$post->cover_path}}" alt="Card image cap">
         <div class="card-body">
             <a href="{{route('blog.show', $post->slug)}}"><h2 class="card-title">{{$post->title}}</h2></a>
-            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque,
-                nulla? Quos cum ex quis soluta, a laboriosam. Dicta expedita corporis animi vero voluptate voluptatibus
-                possimus, veniam magni quis!</p>
+            <p class="card-text">{{$post->description}}</p>
             <a href="{{route('blog.show', $post->slug)}}" class="btn btn-primary">Read More &rarr;</a>
         </div>
         <div class="card-footer text-muted">
             Posted on {{$post->created_at}} by: 
-            {{-- <a href="#">{{$post->user_id}}</a> --}}
             <a href="#">{{$post->user->name}}</a>
+            <span class="float-right">Visits: {{$post->visits}}</span>
         </div>
     </div>
             

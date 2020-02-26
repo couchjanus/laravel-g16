@@ -17,7 +17,7 @@
 
 @section('body_class')
     "blog-body"
-  <!-- Custom bady class for this template -->
+  
 @endsection
 
 @section('page')

@@ -21,12 +21,12 @@
     <hr>
 
     <!-- Date/Time -->
-    <p>Posted on January {{ $post->created_at }}</p>
+    <p>Posted on January {{ $post->created_at }} <span class="float-right">Visits: {{$post->visits}}</span></p>
 
     <hr>
 
     <!-- Preview Image -->
-    <img class="img-fluid rounded" src="http://placehold.it/900x300" alt="">
+    <img class="img-fluid rounded" src="{{ $post->cover_path }}" alt="{{ $post->title }}">
 
     <hr>
 
@@ -34,10 +34,7 @@
     <p class="lead">{{ $post->content }}</p>
     <p><strong>Categories: </strong> 
     @foreach($post->categories as $cats)
-        <a href="" class="btn btn-info">{{ $cats->name }} &rarr;</a>
-        @foreach($cats->children as $cat)
-         <a href="" class="btn btn-info">{{ $cats->name }} &rarr;</a>
-        @endforeach
+        <a href="" class="badge badge-pill badge-info">{{ $cats->name }}</a>
     @endforeach
     </p>
     <hr>
