@@ -7,14 +7,21 @@ use App\{Post, Category, Tag};
 use App\Enums\PostEnumStatusType;
 
 use Illuminate\Http\Request;
-use Auth;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Image;
 
+use Auth;
+use Gate;
+
 class PostController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:admin');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -34,12 +41,35 @@ class PostController extends Controller
      */
     public function create()
     {
-        $title = "Add New Post";
-        $categories = Category::get()->pluck('name', 'id');
-        $tags = Tag::get()->pluck('name', 'id');
-        $status = PostEnumStatusType::toSelectArray();
-        return view('admin.posts.create', compact('title'))
-            ->withStatus($status)->withCategories($categories)->withTags($tags);
+        $user = Auth::guard('admin')->user();
+        
+        // if ($user->can('create', Post::class)) {
+        //     echo 'Current logged in user is allowed to create new posts.';
+        // } else {
+        //     echo 'You can not create post';
+        // }
+        // exit;
+        
+
+        // if ($this->authorize('create', Post::class)) {
+        //     echo 'Current logged in user is allowed to create new posts.';
+        // } else {
+        //     echo 'You can not create post';
+        // }
+        // exit;
+
+        
+        if ($user->can('create', Post::class)) {
+            $title = "Add New Post";
+            $categories = Category::get()->pluck('name', 'id');
+            $tags = Tag::get()->pluck('name', 'id');
+            $status = PostEnumStatusType::toSelectArray();
+            return view('admin.posts.create', compact('title'))
+                ->withStatus($status)->withCategories($categories)->withTags($tags);
+        } else {
+            return redirect(route('admin.posts.index'))->with('warning','You can not create post');
+        }
+        
     }
 
     /**
@@ -60,8 +90,7 @@ class PostController extends Controller
             'title' => $request->title,
             'content' => $request->content,
             'status' => $request->status,
-            'user_id' => Auth::id() ?? 1,
-            // 'cover_path' => $this->uploadCover($request->file("cover")),
+            'user_id' => Auth::guard('admin')->id(),
             'cover_path' => $this->uploadImage($request->file("cover")),
             'visits' => 0
         ]);
@@ -96,7 +125,11 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        // if ($user->can('view', $post)) {
+        //   echo "Current logged in user is allowed to update the Post: {$post->title}";
+        // } else {
+        //   echo 'Not Authorized.';
+        // }
 
     }
 
@@ -108,10 +141,24 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        $categories = Category::pluck('name', 'id'); 
-        $status = PostEnumStatusType::toSelectArray();
-        $tags = Tag::get()->pluck('name', 'id');
-        return view('admin.posts.edit')->withPost($post)->withStatus($status)->withCategories($categories)->withTags($tags)->withTitle('Posts management');
+        $user = Auth::guard('admin')->user();
+
+        // if (Gate::forUser($user)->allows('update-post', $post)) {
+        //     echo 'Allowed Edit Post';
+        // } else {
+        //         echo 'Not Allowed Edit Post ';
+        // }
+        // exit;
+
+        if (Gate::forUser($user)->allows('update-post', $post)) {
+            $categories = Category::pluck('name', 'id'); 
+            $status = PostEnumStatusType::toSelectArray();
+            $tags = Tag::get()->pluck('name', 'id');
+            return view('admin.posts.edit')->withPost($post)->withStatus($status)->withCategories($categories)->withTags($tags)->withTitle('Posts management');
+        } else {   
+            return redirect(route('admin.posts.index'))->with('warning','Not Allowed Edit Post');
+        }
+        
     }
 
     /**
@@ -139,6 +186,15 @@ class PostController extends Controller
         $post->categories()->sync((array)$request->input('categories')); 
 
         return redirect()->route('admin.posts.index');
+
+        // $user = Auth::guard('admin')->user();
+        // if ($user->can('update', $post)) {
+        // $post->update($request->all());
+        // $post->tags()->sync((array)$request->input('tags'));
+        // return redirect(route('admin.posts.index'))->with('message','Post has been updated successfully');
+        // } else {
+        //     return redirect(route('admin.posts.index'))->with('warning',"Current logged in user is not allowed to update the Post: {$post->id}");
+        // }
     }
 
     /**
@@ -153,5 +209,25 @@ class PostController extends Controller
         Storage::delete("public/covers/{$post->cover}");
         $post->delete();
         return redirect()->route('admin.posts.index');
+
+        // $user = Auth::guard('admin')->user();
+        
+        // if ($user->can('delete', $post)) {
+        //     $post->tags()->detach();
+        //     $post->delete();
+        //     return redirect()->route('admin.posts.index')->with('success','Post deleted successfully');
+        // } else {
+        //     return redirect()->route('admin.posts.index')->with('warning','Пользователь '.$user->name.' не может удалять статью...');
+        // }
+        
+        // if (Gate::forUser($user)->denies('destroy-post', $post)) {
+        //     // Пользователь не может удалять статью...
+        //     // dd('Пользователь '.$user->name.' не может удалять статью...');
+        //     return redirect()->route('posts.index')->with('warning','Пользователь '.$user->name.' не может удалять статью...');
+        // } else {
+        // $post->tags()->detach();
+        // $post->delete();
+        // return redirect()->route('posts.index')->with('type','success')->with('message','Post deleted successfully');
+        // }
     }
 }

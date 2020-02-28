@@ -50,4 +50,13 @@ class Admin extends Authenticatable
         return $query->withTrashed()->where('id', $id)->first();       
     }
 
+    static function scopeStatus($query, $status)
+    {
+        return $query->where('status', $status);
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'admin_role');
+    }
 }

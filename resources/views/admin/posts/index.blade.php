@@ -48,9 +48,11 @@
                                     <a class="btn btn-xs btn-primary" href="{{ route('admin.posts.show', $post->id) }}">View</a>
                                     <a class="btn btn-xs btn-info" href="{{ route('admin.posts.edit', $post->id) }}">Edit</a>
 
+                                    @if (Auth::guard('admin')->user()->can('delete-post', $post))
                                     <form action="{{ route('admin.posts.destroy',  $post->id) }}" method="post"  style="display: inline-block;">@method('DELETE') @csrf
                                         <button title="Delete post" type="submit" class="btn btn-xs btn-danger">Delete</button>
                                     </form>  
+                                    @endif
                             </td>
 
                         </tr>

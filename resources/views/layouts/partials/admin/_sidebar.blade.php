@@ -26,10 +26,50 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="{{ route("admin.permissions.index") }}">
+                        <i class="fas fa-users"></i>
+                        <p>
+                            <span>Permissions</span>
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route("admin.roles.index") }}">
+                        <i class="fas fa-users"></i>
+                        <p>
+                            <span>Roles</span>
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route("admin.admins.index") }}">
+                        <i class="fas fa-users"></i>
+                        <p>
+                            <span>Admins</span>
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="{{ route("admin.categories.index") }}" class="nav-link">
                         <i class="fas fa-cogs"></i>
                         <p>
                             <span>Categories</span>
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route("admin.tags.index") }}" class="nav-link">
+                        <i class="fas fa-cogs"></i>
+                        <p>
+                            <span>Tags</span>
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route("admin.posts.index") }}" class="nav-link">
+                        <i class="fas fa-cogs"></i>
+                        <p>
+                            <span>Posts</span>
                         </p>
                     </a>
                 </li>

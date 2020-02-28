@@ -25,9 +25,17 @@ Route::namespace('Admin')
         Route::resource('users', 'UserController');
         Route::resource('tags', 'TagController');
         
+        Route::get('admins/trashed', 'AdminController@trashed')->name('admins.trashed');
+        Route::post('admins/restore/{id}', 'AdminController@restore')->name('admins.restore');
+        Route::delete('admins/force/{id}', 'AdminController@force')->name('admins.force');
+        Route::resource('admins', 'AdminController');
+        
         Route::get('invitations', 'InvitationsController@index')->name('showInvitations');
         Route::post('invite/{id}', 'InvitationsController@sendInvite')
         ->name('send.invite');
+
+        Route::resource('permissions', 'PermissionController');
+        Route::resource('roles', 'RoleController');
          /**
          * Admin Auth Route(s)
          */
