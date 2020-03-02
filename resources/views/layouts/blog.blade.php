@@ -29,7 +29,7 @@
 
         <div class="row">
             @yield('content')
-            @yield('sidebar')
+            @include('layouts.partials.app._sidebar')
         </div>
         <!-- /.row -->
 

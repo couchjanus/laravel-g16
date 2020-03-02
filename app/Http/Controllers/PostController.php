@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Post;
 
-class BlogController extends Controller
+class PostController extends Controller
 {
 
     public function index()
@@ -16,7 +16,7 @@ class BlogController extends Controller
         //     $post->comments = $post->getThreadedComments();
         // });
 
-        return view('blog.index', ['title'=>'Hello there! It’s a Blog!', 'posts' => $posts]);
+        return view('posts.index', ['title'=>'Hello there! It’s a Blog!', 'posts' => $posts]);
     }
 
     public function show($slug)
@@ -25,10 +25,11 @@ class BlogController extends Controller
             $post = Post::findOrFail($slug);
             return Redirect::to(route('blog.show', $post->slug), 301);
         }
-        $post = Post::whereSlug($slug)->with('user')->with('categories')->firstOrFail();
+        $post = Post::whereSlug($slug)->with('user')->with('categories')->with('comments')->firstOrFail();
 
-        // $post->comments = $post->getThreadedComments();
+        // dd($post);
+
         $post->update(['visits' => $post->visits+1]);
-        return view('blog.show',compact('post'));
+        return view('posts.show',compact('post'));
     }
 }

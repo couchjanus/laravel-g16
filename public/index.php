@@ -86,6 +86,6 @@ $kernel->terminate($request, $response);
 // $value = config('app.timezone');
 // dd($value);
 
-$time_end = microtime(true);
-$time = $time_end - LARAVEL_START;
-echo "Выполнено за $time секунд";
+// $time_end = microtime(true);
+// $time = $time_end - LARAVEL_START;
+// echo "Выполнено за $time секунд";

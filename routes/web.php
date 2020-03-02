@@ -56,11 +56,8 @@ Route::namespace('Admin')
         });
 });
 
-
-
-
-Route::get('/blog', 'BlogController@index')->name('blog.index'); 
-Route::get('blog/{slug}', 'BlogController@show')->name('blog.show');
+Route::get('/blog', 'PostController@index')->name('blog.index'); 
+Route::get('blog/{slug}', 'PostController@show')->name('blog.show');
 
 
 Route::get('/home', function () {

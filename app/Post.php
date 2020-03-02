@@ -5,6 +5,9 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
 
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use App\Comment;
+
 class Post extends Model
 {
     use Sluggable;
@@ -12,6 +15,9 @@ class Post extends Model
     protected $fillable = [
         'title', 'content', 'status', 'user_id', 'cover_path', 'visits'
     ];
+
+    protected $dates = ['created_at', 'deleted_at']; 
+
 
     /**
      * Return the sluggable configuration array for this model.
@@ -66,4 +72,15 @@ class Post extends Model
     {
         return substr($this->content, 0, 70) . "...";
     }
+
+    public function comments(): MorphMany
+    {
+        return $this->morphMany(Comment::class, 'commentable')->with('creator');
+    }
+
+    public function comment($data, Model $creator): Comment
+    {
+        return (new Comment())->createComment($this, $data, $creator);
+    }
+
 }
