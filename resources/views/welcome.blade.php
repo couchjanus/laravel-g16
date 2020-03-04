@@ -11,6 +11,7 @@
 <div class="col-md-8">
 
     <h1 class="my-4">Home Page</h1>
+    <search-component></search-component>
 
 </div>
 @endsection

@@ -1,14 +1,17 @@
 @extends('layouts.admin')
 @section('content')
     <div style="margin-bottom: 10px;" class="row">
-        <div class="col-lg-12">
-            <a class="btn btn-success" href="{{ route("admin.users.create") }}">
-                Add New
-            </a>
-            <a class="btn btn-warning" href="{{ route("admin.users.trashed") }}">
-                Trashed Users
-            </a>
-        </div>
+      <div class="col-lg-12">
+        <nav class="nav nav-pills flex-column flex-sm-row">
+            <a class="text-sm-center nav-link badge badge-success" href="{{ route("admin.users.create") }}">Add New</a>
+            <a class="text-sm-center nav-link badge badge-danger" href="{{ route("admin.users.trashed") }}">Trashed Users</a>
+            <spam class="flex-sm-fill text-sm-center nav-link">
+            <form class="form-inline justify-content-end" action="{{ route('admin.users.search') }}">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q" value="{{ request('q') }}">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form></spam>
+        </nav>
+      </div>
     </div>
 
 <div class="card">

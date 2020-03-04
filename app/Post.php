@@ -7,10 +7,15 @@ use Cviebrock\EloquentSluggable\Sluggable;
 
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use App\Comment;
+use Spatie\Searchable\Searchable as SpSearch;
+use Spatie\Searchable\SearchResult;
 
-class Post extends Model
+use Laravel\Scout\Searchable;
+
+class Post extends Model implements SpSearch
 {
     use Sluggable;
+    use Searchable;
 
     protected $fillable = [
         'title', 'content', 'status', 'user_id', 'cover_path', 'visits'
@@ -81,6 +86,17 @@ class Post extends Model
     public function comment($data, Model $creator): Comment
     {
         return (new Comment())->createComment($this, $data, $creator);
+    }
+
+    public function getSearchResult(): SearchResult
+    {
+        $url = route('blog.show', $this->slug);
+
+        return new SearchResult(
+            $this,
+            $this->title,
+            $url
+        );
     }
 
 }

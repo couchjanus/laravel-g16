@@ -1,9 +1,10 @@
 <?php
+use Illuminate\Http\{Request, Response};
 
 Route::get('/', function () {
     return view('welcome');
 });
-// Route::middleware('auth', 'admin')->namespace('Admin')
+
 Route::namespace('Admin')
     ->prefix('admin')
     ->as('admin.')
@@ -22,6 +23,15 @@ Route::namespace('Admin')
         Route::get('users/trashed', 'UserController@trashed')->name('users.trashed');
         Route::post('users/restore/{id}', 'UserController@restore')->name('users.restore');
         Route::delete('users/force/{id}', 'UserController@force')->name('users.force');
+        Route::any('users/search', function (Request $request) {
+            $q = $request->q;
+            $users = App\User::where('name','LIKE','%'.$q.'%')->orWhere('email','LIKE','%'.$q.'%')->paginate();
+            if(count($users) > 0) {
+                return view('admin.users.index', compact('users', 'q'))->withTitle('Users Management');
+            } else {
+                  return redirect(route('admin.users.index'))->withWarning('No Details found. Try to search again !');
+            }
+        })->name('users.search');
         Route::resource('users', 'UserController');
         Route::resource('tags', 'TagController');
         
@@ -58,6 +68,8 @@ Route::namespace('Admin')
 
 Route::get('/blog', 'PostController@index')->name('blog.index'); 
 Route::get('blog/{slug}', 'PostController@show')->name('blog.show');
+Route::post('/search', 'PostController@search')->name('search');
+Route::get('/categories/{category}', 'CategoryController@show')->name('categories.show');
 
 
 Route::get('/home', function () {

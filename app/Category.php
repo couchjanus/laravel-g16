@@ -5,8 +5,10 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Kalnoy\Nestedset\NodeTrait;
+use Spatie\Searchable\Searchable;
+use Spatie\Searchable\SearchResult;
 
-class Category extends Model
+class Category extends Model implements Searchable
 {
     use SoftDeletes;
     use NodeTrait;
@@ -65,6 +67,17 @@ class Category extends Model
     public function posts()
     {
         return $this->belongsToMany(Post::class);
+    }
+
+    public function getSearchResult(): SearchResult
+    {
+        $url = route('categories.show', $this->id);
+
+        return new SearchResult(
+            $this,
+            $this->name,
+            $url
+         );
     }
 
 }

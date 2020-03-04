@@ -24,6 +24,8 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
-        "bootstrap-switch": "^3.4.0"
+        "algoliasearch": "^4.0.3",
+        "bootstrap-switch": "^3.4.0",
+        "vue-instantsearch": "^2.7.0"
     }
 }
